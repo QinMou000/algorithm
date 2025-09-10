@@ -6,10 +6,11 @@ public:
         int n = nums.size();
         if (n == 1)
             return nums[0];
-        int ans = dp[0] = nums[0];
+        int ans = dp[0] = nums[0]; // 初始化
         for (int i = 1; i < n; i++) {
+            // 区分nums[i] 大于零 和小于等于零 两种情况
             dp[i] = max(dp[i - 1] + nums[i], nums[i]);
-            ans = dp[i] > ans ? dp[i] : ans;
+            ans = dp[i] > ans ? dp[i] : ans; // 更新结果
         }
         return ans;
     }
