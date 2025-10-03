@@ -8,7 +8,7 @@ public:
         for (int i = 0; i < strs.size(); i++) {
             string key = strs[i];
             sort(key.begin(), key.end()); // 排序
-            hash[key].push_back(strs[i]); // 将源字符存到值中
+            hash[key].push_back(strs[i]); // 将源字符存到同一个排序后的值中
         }
         for (auto e : hash)
             ans.push_back(e.second); // 统一按顺序插入
