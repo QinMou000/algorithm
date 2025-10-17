@@ -38,3 +38,6 @@
 
 # Json files
 *.json
+
+# Clion
+*.idea*
