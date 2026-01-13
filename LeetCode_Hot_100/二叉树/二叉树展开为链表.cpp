@@ -41,9 +41,9 @@ public:
             return;
         flatten(root->right);
         flatten(root->left);
-        root->right = tmp;
-        root->left = nullptr;
-        tmp = root;
+        root->right = tmp;    // 当前节点的右指针指向tmp（上一个处理的节点）
+        root->left = nullptr; // 左指针置空（符合单链表要求）
+        tmp = root;           // 更新tmp为当前节点（供父节点使用）
     }
 };
 
