@@ -66,4 +66,21 @@ public:
     bool isValidBST(TreeNode* root) { return helper(root, LONG_MIN, LONG_MAX); }
 };
 
+// 第二遍写:
+class Solution {
+public:
+    using LL = long long;
+    bool isValidBST(TreeNode* root) {
+        return recursion(root, LONG_MIN, LONG_MAX);
+    }
+    bool recursion(TreeNode* root, LL lower, LL upper) {
+        if (!root)
+            return true;
+        if (root->val <= lower || root->val >= upper)
+            return false;
+        return recursion(root->left, lower, root->val) && // 左边节点最大不能超过root->val
+               recursion(root->right, root->val, upper);  // 右边节点最小不能小于root->val
+    }
+};
+
 // link : https://leetcode.cn/problems/validate-binary-search-tree/?envType=study-plan-v2&envId=top-100-liked
