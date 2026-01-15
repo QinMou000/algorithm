@@ -21,4 +21,27 @@ public:
     }
 };
 
+// 第二遍写:
+class Solution {
+public:
+    int longestConsecutive(vector<int>& nums) {
+        unordered_set<int> map{nums.begin(), nums.end()}; // 主要是为了去重
+        int ans = 0;
+        for (auto& e : map) {
+            // 也就是 e - 1 在 map 里面找不到
+            if (map.find(e - 1) == map.end()) {
+                // 这个时候我们把 e 看作整个连续序列的开头
+                int cnt = 0, i = e; // 从 i 开始计算
+                while (map.find(i++) != map.end()) {
+                    // 如果找到i了就把cnt++;
+                    cnt++;
+                }
+                // 取最大值
+                ans = max(ans, cnt);
+            }
+        }
+        return ans;
+    }
+};
+
 // link : https://leetcode.cn/problems/longest-consecutive-sequence/description/?envType=study-plan-v2&envId=top-100-liked
