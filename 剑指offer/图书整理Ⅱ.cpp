@@ -1,19 +1,38 @@
+// class CQueue {
+// public:
+//     CQueue() {}
+
+//     void appendTail(int value) { vec.emplace_back(value); }
+
+//     int deleteHead() {
+//         if (vec.empty())
+//             return -1;
+//         int tmp = vec.front();
+//         vec.erase(vec.begin(), vec.begin() + 1);
+//         return tmp;
+//     }
+
+// private:
+//     vector<int> vec;
+// };
+
+// 第二遍写
 class CQueue {
 public:
     CQueue() {}
 
-    void appendTail(int value) { vec.emplace_back(value); }
+    void appendTail(int value) { _q.push(value); }
 
     int deleteHead() {
-        if (vec.empty())
+        if (_q.empty())
             return -1;
-        int tmp = vec.front();
-        vec.erase(vec.begin(), vec.begin() + 1);
+        int tmp = _q.front();
+        _q.pop();
         return tmp;
     }
 
 private:
-    vector<int> vec;
+    queue<int> _q;
 };
 
 /**
