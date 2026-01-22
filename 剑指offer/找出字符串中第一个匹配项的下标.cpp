@@ -40,6 +40,6 @@ public:
         return -1;
     }
 };
-
+// KMP算法 TODO
 
 // link : https://leetcode.cn/problems/find-the-index-of-the-first-occurrence-in-a-string/description/?envType=study-plan-v2&envId=top-interview-150
