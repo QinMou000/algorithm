@@ -42,4 +42,24 @@ private:
     // }
 };
 
+// 第二遍写
+class Solution {
+public:
+    string largestNumber(vector<int>& nums) {
+        auto cmp = [](const string& x, const string& y) {
+            return x + y > y + x;
+        };
+        vector<string> tmp;
+        for (auto e : nums)
+            tmp.push_back(to_string(e));
+        sort(tmp.begin(), tmp.end(), cmp);
+        string ans;
+        for (auto& str : tmp)
+            ans += str;
+        if (ans[0] == '0')
+            return "0";
+        return ans;
+    }
+};
+
 // link : https://leetcode.cn/problems/largest-number/description/?envType=problem-list-v2&envId=greedy
