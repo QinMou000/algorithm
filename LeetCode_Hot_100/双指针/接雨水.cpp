@@ -62,3 +62,38 @@ public:
         return summary - sum; // 用总和减去只有黑色块的数量
     }
 };
+
+// 第二遍写
+
+class Solution {
+public:
+    int trap(vector<int>& height) {
+        int n = height.size();
+        int area = 0;
+        int max_high = 0;
+        // 计算柱子的面积 && 找到最高的柱子
+        for (int i = 0; i < n; i++) {
+            area += height[i];
+            max_high = max(max_high, height[i]);
+        }
+        if (max_high == 0)
+            return 0;
+        // 统计雨水 + 柱子的面积
+        int left = 0, right = n - 1; // 左闭右闭
+        int sum_area = 0;
+        int high = 0;
+        while (left <= right) {
+            high++;
+            while (height[left] < high)
+                left++;
+            while (height[right] < high)
+                right--;
+            sum_area += right - left + 1;
+            if (high >= max_high)
+                break;
+        }
+        return sum_area - area;
+    }
+};
+
+// link : https://leetcode.cn/problems/trapping-rain-water/description/?envType=study-plan-v2&envId=top-100-liked
