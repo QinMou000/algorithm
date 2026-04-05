@@ -76,4 +76,23 @@ public:
 // 当遍历到第二个元素 4 时，前缀和 pre_sum = 7，此时 pre_sum - k = 0。如果没有初始化 map[0] = 1，会认为没有符合条件的 j，但实际上
 // [0,1] 这个子数组（元素 3+4）的和正好是 7，需要通过 map[0] = 1 来统计这个情况。
 
+// 第三遍写
+class Solution {
+public:
+    int subarraySum(vector<int>& nums, int k) {
+        int n = nums.size();
+        unordered_map<int, int> map; // <前缀和, 前缀和出现的次数>
+        map[0] = 1;                  // 满足临界情况
+        int ans = 0;
+        int pre_num = 0;
+        for (int i = 0; i < n; i++) {
+            pre_num += nums[i];
+            if (map.find(pre_num - k) != map.end())
+                ans += map[pre_num - k];
+            map[pre_num]++;
+        }
+        return ans;
+    }
+};
+
 // link : https://leetcode.cn/problems/subarray-sum-equals-k/?envType=study-plan-v2&envId=top-100-liked
