@@ -62,4 +62,54 @@ public:
     }
 };
 
+// 第二遍
+
+class Solution {
+public:
+    void AdjustDown(vector<int>& nums, int parent) {
+        int child = parent * 2 + 1; // 左孩子
+        while (child < nums.size()) {
+            // 找两个孩子中较小的那一个
+            if (child + 1 < nums.size() && nums[child + 1] < nums[child])
+                child++;
+            if (nums[parent] > nums[child]) {
+                swap(nums[parent], nums[child]);
+                parent = child;
+                child = parent * 2 + 1;
+            } else
+                break;
+        }
+    }
+    void AdjustUp(vector<int>& nums, int child) {
+        int parent = (child - 1) / 2;
+        while (child > 0) {
+            if (nums[parent] > nums[child]) {
+                swap(nums[parent], nums[child]);
+                child = parent;
+                parent = (child - 1) / 2;
+            } else
+                break;
+        }
+    }
+    void push(vector<int>& nums, int value) {
+        nums.push_back(value);
+        AdjustUp(nums, nums.size() - 1);
+    }
+    void pop(vector<int>& nums) {
+        swap(nums[0], nums[nums.size() - 1]);
+        nums.pop_back();
+        AdjustDown(nums, 0);
+    }
+    int findKthLargest(vector<int>& nums, int k) {
+        // 小顶堆
+        vector<int> heap;
+        for (auto e : nums) {
+            push(heap, e);
+            if (heap.size() > k)
+                pop(heap);
+        }
+        return heap[0];
+    }
+};
+
 // link : https://leetcode.cn/problems/kth-largest-element-in-an-array/description/?envType=study-plan-v2&envId=top-100-liked
