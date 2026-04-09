@@ -20,4 +20,27 @@ public:
     }
 };
 
+// 第二遍写
+class Solution {
+public:
+    vector<int> findAnagrams(string s, string p) {
+        vector<int> p_map(30);
+        vector<int> s_map(30);
+        for (char c : p)
+            p_map[c - 'a']++;
+        vector<int> ans;
+        for (int left = 0, right = 0; right < s.size(); right++) {
+            // 入窗口
+            s_map[s[right] - 'a']++;
+            // 判断
+            if (p.size() < right - left + 1)
+                s_map[s[left++] - 'a']--; // 出窗口
+            // 更新
+            if (s_map == p_map)
+                ans.push_back(left);
+        }
+        return ans;
+    }
+};
+
 // link : https://leetcode.cn/problems/find-all-anagrams-in-a-string/description/?envType=study-plan-v2&envId=top-100-liked
