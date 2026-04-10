@@ -38,5 +38,38 @@ public:
     }
 };
 
+// 第二遍写
+class Solution {
+public:
+    ListNode* mergeKLists(vector<ListNode*>& lists) {
+        // 定义优先级队列
+        auto cmp = [](ListNode* n1, ListNode* n2) { return n1->val > n2->val; };
+        priority_queue<ListNode*, vector<ListNode*>, decltype(cmp)> pq(cmp);
+        // 此处可以不用将所有节点全部插入
+        // 可以先插入所有头结点
+        // 之后再合并的时候在对后续节点做处理
+        // 如果当前节点还有next节点
+        // 就将next节点入队列
+        // 可降低时间复杂度
+        for (auto& arr : lists) {
+            ListNode* cur = arr; // 头结点
+            while (cur) {
+                pq.push(cur);
+                cur = cur->next;
+            }
+        }
+        ListNode* dump = new ListNode(-1);
+        ListNode* cur = dump;
+        while (!pq.empty()) {
+            ListNode* topNode = pq.top();
+            pq.pop();
+            cur->next = topNode;
+            topNode->next = nullptr; // 清除next 避免冗余节点
+            cur = cur->next;
+        }
+        return dump->next;
+    }
+};
+
 
 // link : https://leetcode.cn/problems/merge-k-sorted-lists/description/?envType=study-plan-v2&envId=top-100-liked
