@@ -38,4 +38,21 @@ public:
     }
 };
 
+class Solution {
+public:
+    bool hasCycle(ListNode* head) {
+        if (!head || !head->next)
+            return false;
+        ListNode* fast = head;
+        ListNode* slow = head;
+        while (fast && fast->next) {
+            fast = fast->next->next;
+            slow = slow->next;
+            if (fast == slow)
+                break;
+        }
+        return fast == slow;
+    }
+};
+
 // link : https://leetcode.cn/problems/linked-list-cycle/?envType=study-plan-v2&envId=top-100-liked 
