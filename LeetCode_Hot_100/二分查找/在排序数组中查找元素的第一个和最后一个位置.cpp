@@ -61,14 +61,14 @@ public:
         int n = nums.size();
         if (!n)
             return {-1, -1};
-        int left = BinSearch(nums, target);
+        int left = BinSearchLeft(nums, target);
         cout << left << endl;
         if (left >= n || nums[left] != target)
             return {-1, -1};
-        int right = BinSearch(nums, target + 1);
-        return {left, right - 1};
+        int right = BinSearchRight(nums, target);
+        return {left, right};
     }
-    int BinSearch(vector<int>& nums, int target) {
+    int BinSearchLeft(vector<int>& nums, int target) {
         int n = nums.size();
         int left = 0, right = n - 1;
         while (left <= right) {
@@ -79,6 +79,18 @@ public:
                 left = mid + 1;
         }
         return left;
+    }
+    int BinSearchRight(vector<int>& nums, int target) {
+        int n = nums.size();
+        int left = 0, right = n - 1;
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            if (nums[mid] <= target)
+                left = mid + 1;
+            else
+                right = mid - 1;
+        }
+        return right;
     }
 };
 
