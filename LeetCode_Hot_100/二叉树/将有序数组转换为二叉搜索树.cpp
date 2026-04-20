@@ -28,5 +28,22 @@ public:
         return recursion(nums, 0, nums.size() - 1);
     }
 };
+// 第二遍写
+class Solution {
+public:
+    TreeNode* sortedArrayToBST(vector<int>& nums) {
+        int n = nums.size();
+        return constrction(nums, 0, n - 1);
+    }
+    TreeNode* constrction(vector<int>& nums, int left, int right) {
+        if (left > right)
+            return nullptr;
+        int mid = left + (right - left) / 2;
 
+        TreeNode* newNode = new TreeNode(nums[mid]);
+        newNode->left = constrction(nums, left, mid - 1);
+        newNode->right = constrction(nums, mid + 1, right);
+        return newNode;
+    }
+};
 // link : https://leetcode.cn/problems/convert-sorted-array-to-binary-search-tree/description/?envType=study-plan-v2&envId=top-100-liked
