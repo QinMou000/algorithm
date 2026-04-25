@@ -53,4 +53,36 @@ public:
     }
 };
 
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* detectCycle(ListNode* head) {
+        if (!head || !head->next)
+            return nullptr;
+        ListNode* fast = head;
+        ListNode* slow = head;
+        bool x = false;
+        while (fast && fast->next) {
+            fast = fast->next->next;
+            slow = slow->next;
+            if (fast == slow) {
+                slow = head;
+                while (slow != fast) {
+                    slow = slow->next;
+                    fast = fast->next;
+                }
+                return fast;
+            }
+        }
+        return nullptr;
+    }
+};
+
 // link : https://leetcode.cn/problems/linked-list-cycle-ii/description/?envType=study-plan-v2&envId=top-100-liked 
