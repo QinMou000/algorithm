@@ -67,4 +67,32 @@ public:
     }
 };
 
+// 第二遍写
+class Solution {
+public:
+    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+        ListNode* dump = new ListNode(-1);
+        ListNode* cur = dump;
+        int sum = 0;
+        while (l1 || l2) {
+            if (l1) {
+                sum += l1->val;
+                l1 = l1->next;
+            }
+            if (l2) {
+                sum += l2->val;
+                l2 = l2->next;
+            }
+            int x = sum % 10;
+            ListNode* newNode = new ListNode(x);
+            cur->next = newNode;
+            cur = newNode;
+            sum /= 10; // 算作下一次的进位
+        }
+        if (sum)
+            cur->next = new ListNode(sum);
+        return dump->next;
+    }
+};
+
 // link : https://leetcode.cn/problems/add-two-numbers/description/?envType=study-plan-v2&envId=top-100-liked
