@@ -92,4 +92,45 @@ class Solution {
         return tmp->next; // 剔除哨兵节点
     }
 };
+
+// 第二遍写
+class Solution {
+public:
+    ListNode* sortList(ListNode* head) { return MergeLists(head); }
+    ListNode* MergeLists(ListNode* head) {
+        if (!head || !head->next)
+            return head;
+        // 双指针找中
+        ListNode* fast = head->next; // 让fast先走一步
+        ListNode* slow = head;
+        while (fast && fast->next) {
+            fast = fast->next->next;
+            slow = slow->next;
+        }
+        ListNode* right = MergeLists(slow->next);
+        slow->next = nullptr; // 从中间断开
+        ListNode* left = MergeLists(head);
+
+        return Merge(left, right); // 归并
+    }
+    ListNode* Merge(ListNode* left, ListNode* right) {
+        ListNode* dump = new ListNode(-1);
+        ListNode* cur = dump;
+        while (left && right) {
+            if (left->val > right->val) {
+                cur->next = right;
+                right = right->next;
+            } else {
+                cur->next = left;
+                left = left->next;
+            }
+            cur = cur->next;
+        }
+        if (left)
+            cur->next = left;
+        if (right)
+            cur->next = right;
+        return dump->next;
+    }
+};
 // link : https://leetcode.cn/problems/sort-list/description/?envType=study-plan-v2&envId=top-100-liked
