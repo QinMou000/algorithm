@@ -91,3 +91,88 @@ public:
  * int param_1 = obj->get(key);
  * obj->put(key,value);
  */
+
+ // 第二遍写
+ struct Node {
+    int _k;
+    int _v;
+    Node* _prev;
+    Node* _next;
+    Node(int k, int v) : _k(k), _v(v), _prev(nullptr), _next(nullptr) {}
+    Node() : _k(0), _v(0), _prev(nullptr), _next(nullptr) {}
+};
+
+class LRUCache {
+private:
+    unordered_map<int, Node*> _map;
+    Node* _head;
+    Node* _tail;
+    int _size;     // 当前有的节点数量
+    int _capacity; // 题目要求的最大容量
+
+public:
+    LRUCache(int capacity)
+        : _capacity(capacity), _size(0), _head(new Node()), _tail(new Node()) {
+        _head->_next = _tail;
+        _tail->_prev = _head;
+    }
+
+    int get(int key) {
+        if (_map.find(key) == _map.end())
+            return -1;
+        Node* node = _map[key];
+        moveToHead(node);
+        return node->_v;
+    }
+
+    void put(int key, int value) {
+        if (_map.find(key) == _map.end()) {
+            Node* newNode = new Node(key, value);
+            _map[key] = newNode;
+            addToHead(newNode);
+            ++_size;
+            if (_size > _capacity) {
+                // 删除尾节点
+                Node* removeNode = removeTail();
+                _map.erase(removeNode->_k);
+                delete removeNode;
+                --_size;
+            }
+        } else {
+            // 哈希表定位
+            Node* node = _map[key];
+            // 改值
+            node->_v = value;
+            // 移动
+            moveToHead(node);
+        }
+    }
+    void removeNode(Node* node) {
+        node->_prev->_next = node->_next;
+        node->_next->_prev = node->_prev;
+    }
+    void addToHead(Node* node) {
+        node->_next = _head->_next;
+        _head->_next = node;
+        node->_next->_prev = node;
+        node->_prev = _head;
+    }
+    void moveToHead(Node* node) {
+        removeNode(node);
+        addToHead(node);
+    }
+    Node* removeTail() {
+        Node* tmp = _tail->_prev;
+        removeNode(_tail->_prev);
+        return tmp;
+    }
+};
+
+/**
+ * Your LRUCache object will be instantiated and called as such:
+ * LRUCache* obj = new LRUCache(capacity);
+ * int param_1 = obj->get(key);
+ * obj->put(key,value);
+ */
+
+ // link : https://leetcode.cn/problems/lru-cache-lcci/description/
