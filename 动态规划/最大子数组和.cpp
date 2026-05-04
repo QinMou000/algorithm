@@ -16,4 +16,16 @@ public:
 };
 // 3.27腾讯暑期实习一面
 
+class Solution {
+public:
+    int maxSubArray(vector<int>& nums) {
+        int prev_sum = nums[0], ans = nums[0];
+        for (int i = 1; i < nums.size(); i++) {
+            prev_sum = max(prev_sum + nums[i], nums[i]);
+            ans = max(prev_sum, ans);
+        }
+        return ans;
+    }
+};
+
 // link : https://leetcode.cn/problems/maximum-subarray/description/
