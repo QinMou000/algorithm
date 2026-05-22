@@ -21,8 +21,8 @@ public:
     int maxSubArray(vector<int>& nums) {
         int prev_sum = nums[0], ans = nums[0];
         for (int i = 1; i < nums.size(); i++) {
-            prev_sum = max(prev_sum + nums[i], nums[i]);
-            ans = max(prev_sum, ans);
+            prev_sum = max(prev_sum + nums[i], nums[i]); // 以当前元素结尾的最大子数组和 或者 重新开始一个新的子数组
+            ans = max(prev_sum, ans); // 更新全局最大子数组和
         }
         return ans;
     }
