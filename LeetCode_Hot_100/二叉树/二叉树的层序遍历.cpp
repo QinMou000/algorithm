@@ -39,4 +39,43 @@ public:
     }
 };
 
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left),
+ * right(right) {}
+ * };
+ */
+class Solution {
+public:
+    vector<vector<int>> levelOrder(TreeNode* root) {
+        vector<vector<int>> ans;
+        if (!root)
+            return ans;
+        queue<TreeNode*> q;
+        q.push(root);
+        while (!q.empty()) {
+            // 记录当前层的节点个数
+            int size = q.size();
+            vector<int> res; // 装当前层的节点 后续push到ans里面
+            while (size--) {
+                TreeNode* cur = q.front();
+                q.pop();
+                if (cur->left)
+                    q.push(cur->left);
+                if (cur->right)
+                    q.push(cur->right);
+                res.push_back(cur->val);
+            }
+            ans.emplace_back(res);
+        }
+        return ans;
+    }
+};
+
 // link : https://leetcode.cn/problems/binary-tree-level-order-traversal/?envType=study-plan-v2&envId=top-100-liked
