@@ -43,4 +43,32 @@ public:
     }
 };
 
+// 第三遍写：
+class Solution {
+public:
+    vector<int> findAnagrams(string s, string p) {
+        unordered_map<char, int> cnt1;
+        unordered_map<char, int> cnt2;
+        for (char c : p)
+            cnt2[c]++;
+        vector<int> ans;
+
+        for (int left = 0, right = 0; right < s.size(); right++) {
+            // 入窗口
+            cnt1[s[right]]++;
+            // 判断
+            while (right - left + 1 > p.size()) {
+                // 出窗口
+                if (--cnt1[s[left]] == 0)
+                    cnt1.erase(s[left]); // 因为是哈希表，需要删除
+                left++;
+            }
+            // 更新结果
+            if (cnt1 == cnt2)
+                ans.push_back(left);
+        }
+        return ans;
+    }
+};
+
 // link : https://leetcode.cn/problems/find-all-anagrams-in-a-string/description/?envType=study-plan-v2&envId=top-100-liked

@@ -76,7 +76,7 @@ public:
         ListNode* cur1 = headA;
         ListNode* cur2 = headB;
         while (cur1 != cur2) {
-            cur1 = cur1 ? cur1->next : headB;
+            cur1 = cur1 ? cur1->next : headB;// 如果当前不为空，就走下一步；如果走到空了，就跳到链表B的头部
             cur2 = cur2 ? cur2->next : headA;
         }
         return cur1;
