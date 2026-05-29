@@ -96,4 +96,30 @@ public:
     }
 };
 
+// 第三遍写：
+class Solution {
+public:
+    int trap(vector<int>& height) {
+        int pillar = 0; // 柱子面积
+        int max_h = 0;
+        for (auto e : height) {
+            if (e > max_h)
+                max_h = e;
+            pillar += e;
+        }
+        int left = 0, right = height.size() - 1; // 左闭右闭
+        int pillar_and_water = 0;                // 柱子和水的面积
+        int H = 1;
+        while (left <= right && H <= max_h) {
+            while (height[left] < H)
+                left++;
+            while (height[right] < H)
+                right--;
+            pillar_and_water += right - left + 1;
+            H++;
+        }
+        return pillar_and_water - pillar;
+    }
+};
+
 // link : https://leetcode.cn/problems/trapping-rain-water/description/?envType=study-plan-v2&envId=top-100-liked
