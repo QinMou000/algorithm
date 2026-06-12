@@ -22,7 +22,7 @@ public:
 };
 
 // 第二遍写:
-class Solution {
+class Solution { 
 public:
     int longestConsecutive(vector<int>& nums) {
         unordered_set<int> map{nums.begin(), nums.end()}; // 主要是为了去重
@@ -38,6 +38,32 @@ public:
                 }
                 // 取最大值
                 ans = max(ans, cnt);
+            }
+        }
+        return ans;
+    }
+};
+
+// 第三遍写：
+
+class Solution {
+public:
+    int longestConsecutive(vector<int>& nums) {
+        unordered_set<int> set{nums.begin(), nums.end()};
+        int ans = 0;
+        for (auto& e : set) { // 这里遍历去重之后的set会好一些（我是小丑）
+            if (set.find(e - 1) == set.end()) {
+                // hash里面没找到e - 1 把当前数作为序列开头
+                int cnt = 0, cur = e;
+                while (set.find(cur++) != set.end()) {
+                    // 在hash里面能找到下一个数
+                    cnt++;
+                }
+                ans = max(ans, cnt);
+                // 神来之笔 优化如果当前的链大于整个hash的一半，那就不可能还有另外一个答案
+                // 如果有，那么总和就超过了整个set的大小
+                if (ans > set.size() / 2)
+                    break;
             }
         }
         return ans;
