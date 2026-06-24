@@ -32,4 +32,21 @@ public:
     }
 };
 
+// 第二遍写：
+class Solution {
+public:
+    vector<int> twoSum(vector<int>& nums, int target) {
+        unordered_map<int, int> map; // 数字 -> 下标
+
+        for (int i = 0; i < nums.size(); ++i) {
+            int t = target - nums[i];
+            if (map.count(t)) {
+                return {i, map[t]};
+            }
+            map[nums[i]] = i;
+        }
+        return {};
+    }
+};
+
 // link : https://leetcode.cn/problems/two-sum/?envType=study-plan-v2&envId=top-100-liked
