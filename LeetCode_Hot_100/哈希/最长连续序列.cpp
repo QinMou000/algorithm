@@ -70,4 +70,28 @@ public:
     }
 };
 
+// 第四遍写：
+
+class Solution {
+public:
+    int longestConsecutive(vector<int>& nums) {
+        int n = nums.size();
+        unordered_set<int> set(nums.begin(), nums.end());
+
+        int ans = 0;
+        for (int i = 0; i < n; i++) {
+            if (!set.count(nums[i] - 1)) {
+                // nums[i]是一个新连续序列的开头
+                int cur = nums[i], ret = 0;
+
+                while (set.count(cur)) {
+                    cur++, ret++;
+                }
+                ans = max(ans, ret);
+            }
+        }
+        return ans;
+    }
+};
+
 // link : https://leetcode.cn/problems/longest-consecutive-sequence/description/?envType=study-plan-v2&envId=top-100-liked
