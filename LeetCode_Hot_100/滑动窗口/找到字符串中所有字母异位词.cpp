@@ -71,4 +71,29 @@ public:
     }
 };
 
+// 第四遍写：
+class Solution {
+public:
+    vector<int> findAnagrams(string s, string p) {
+        unordered_map<char, int> hash1;
+        unordered_map<char, int> hash2;
+        vector<int> ans;
+        for (auto c : p)
+            hash1[c]++;
+
+        for (int left = 0, right = 0; right < s.size(); right++) {
+            char c = s[right];
+            hash2[c]++;                            // 入窗口
+            if (hash1.size() < right - left + 1) { // 判断
+                char del = s[left++];              // 出窗口
+                if (--hash2[del] == 0)             // 需要删除对应的节点
+                    hash2.erase(del);
+            }
+            if (hash1 == hash2) // 更新结果
+                ans.push_back(left);
+        }
+        return ans;
+    }
+};
+
 // link : https://leetcode.cn/problems/find-all-anagrams-in-a-string/description/?envType=study-plan-v2&envId=top-100-liked
