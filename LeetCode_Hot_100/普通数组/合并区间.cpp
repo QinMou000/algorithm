@@ -23,3 +23,27 @@ public:
         return ans;
     }
 };
+
+// 第二遍写：
+class Solution {
+public:
+    vector<vector<int>> merge(vector<vector<int>>& intervals) {
+        sort(intervals.begin(), intervals.end()); // 按左端点排升序
+        vector<vector<int>> ans;
+        int l = intervals[0][0];
+        int r = intervals[0][1]; // 维护当前左右边界
+        for (int i = 1; i < intervals.size(); i++) {
+            if (r >= intervals[i][0]) { // 更新右边界
+                r = max(r, intervals[i][1]);
+            } else { // 更新答案 更新当前左右边界
+                ans.push_back({l, r});
+                l = intervals[i][0];
+                r = intervals[i][1];
+            }
+        }
+        ans.push_back({l, r}); // 将最后一组边界push
+        return ans;
+    }
+};
+
+// link : https://leetcode.cn/problems/merge-intervals/description/?envType=study-plan-v2&envId=top-100-liked
