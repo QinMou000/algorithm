@@ -133,4 +133,60 @@ public:
         return dump->next;
     }
 };
+
+
+// 第三遍写：
+class Solution {
+public:
+    ListNode* sortList(ListNode* head) { return MergeSort(head); }
+
+    ListNode* MergeSort(ListNode* head) {
+        if (!head || !head->next)
+            return head;
+        // 初始快慢指针都从 head出发，偶数长度分割没问题
+        // 奇数长度左半段会多一个节点，不影响结果，
+        // 但写法标准优化方案是fast先走一步
+        ListNode* fast = head->next; // 同时也避免无限MergeSort调用分割
+        ListNode* low = head;
+        while (fast && fast->next) {
+            fast = fast->next->next;
+            low = low->next;
+        }
+        ListNode* l1 = head;
+        ListNode* l2 = low->next;
+        low->next = nullptr;
+        ListNode* sortl1 = MergeSort(l1);
+        ListNode* sortl2 = MergeSort(l2);
+
+        return MergeSortList(sortl1, sortl2);
+    }
+    ListNode* MergeSortList(ListNode* l1, ListNode* l2) {
+        // 合并两个有序链表
+        if (!l1 && !l2)
+            return nullptr;
+        if (!l1)
+            return l2;
+        if (!l2)
+            return l1;
+        ListNode* cur1 = l1;
+        ListNode* cur2 = l2;
+        ListNode* dump = new ListNode(-1);
+        ListNode* node = dump;
+        while (cur1 && cur2) {
+            if (cur1->val > cur2->val) {
+                node->next = cur2;
+                cur2 = cur2->next;
+            } else {
+                node->next = cur1;
+                cur1 = cur1->next;
+            }
+            node = node->next;
+        }
+        if (cur1)
+            node->next = cur1;
+        if (cur2)
+            node->next = cur2;
+        return dump->next;
+    }
+};
 // link : https://leetcode.cn/problems/sort-list/description/?envType=study-plan-v2&envId=top-100-liked
