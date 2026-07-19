@@ -66,4 +66,38 @@ public:
 //     }
 // };
 
+// 第二遍写
+class Solution {
+public:
+    ListNode* reverseList(ListNode* head) {
+        if (!head)
+            return nullptr;
+        ListNode* prev = nullptr;
+        ListNode* cur = head;
+        ListNode* next = cur->next;
+        while (cur) {
+            next = cur->next;
+            cur->next = prev;
+            prev = cur;
+            cur = next;
+        }
+        return prev;
+    }
+    // ListNode* reverseList(ListNode* head) {
+    //     if (!head)
+    //         return nullptr;
+    //     ListNode* prev = nullptr;
+    //     ListNode* cur = head;
+    //     ListNode* next = cur->next;
+    //     while (next) {
+    //         cur->next = prev;
+    //         prev = cur;
+    //         cur = next;
+    //         next = next->next;
+    //     }
+    //     cur->next = prev;
+    //     return cur;
+    // }
+};
+
 // link : https://leetcode.cn/problems/reverse-linked-list/?envType=study-plan-v2&envId=top-100-liked
