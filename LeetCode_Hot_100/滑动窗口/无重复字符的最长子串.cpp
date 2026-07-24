@@ -39,4 +39,22 @@ public:
     }
 };
 
+// 第三遍写
+class Solution {
+public:
+    int lengthOfLongestSubstring(string s) {
+        unordered_map<char, int> hash;
+        int n = s.size();
+        int ans = 0;
+        for (int left = 0, right = 0; right < n; right++) {
+            hash[s[right]]++;
+            while (hash[s[right]] >= 2) {
+                hash[s[left++]]--;
+            }
+            ans = max(ans, right - left + 1);
+        }
+        return ans;
+    }
+};
+
 // link : https://leetcode.cn/problems/longest-substring-without-repeating-characters/description/?envType=study-plan-v2&envId=top-100-liked
