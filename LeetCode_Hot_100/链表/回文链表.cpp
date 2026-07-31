@@ -68,4 +68,38 @@ public:
     }
 };
 
+// 第二遍写：
+class Solution {
+public:
+    bool isPalindrome(ListNode* head) {
+        ListNode* cur = head;
+        int n = 0;
+        // 算链表长度
+        while (cur) {
+            cur = cur->next;
+            n++;
+        }
+        // 把链表的一半压栈
+        int cnt = n / 2;
+        stack<ListNode*> stk;
+        cur = head;
+        while (cnt--) {
+            stk.push(cur);
+            cur = cur->next;
+        }
+        if (n % 2 == 1)
+            cur = cur->next;
+        // 从中间开始向后与栈顶元素对比
+        while (!stk.empty() && cur) {
+            ListNode* tmp = stk.top();
+            stk.pop();
+            if (tmp->val != cur->val) {
+                return false;
+            }
+            cur = cur->next;
+        }
+        return true;
+    }
+};
+
 // link : https://leetcode.cn/problems/palindrome-linked-list/?envType=study-plan-v2&envId=top-100-liked
