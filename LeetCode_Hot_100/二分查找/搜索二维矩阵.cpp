@@ -1,6 +1,6 @@
 class Solution {
-public:
-    bool searchMatrix(vector<vector<int>>& matrix, int target) {
+  public:
+    bool searchMatrix(vector<vector<int>> &matrix, int target) {
         int m = matrix.size(), n = matrix[0].size();
         // 用 lambda 表达式封装二维数组折叠为一维数组的核心逻辑
         auto RowIndex = [&](int mid) { return mid / n; };
@@ -24,5 +24,22 @@ public:
 // 其实这道题从 左上角看也是一个二叉搜索树 有没有想起什么?
 // link : https://leetcode.cn/problems/search-a-2d-matrix-ii/
 
+// 第二遍写：
+class Solution {
+  public:
+    bool searchMatrix(vector<vector<int>> &matrix, int target) {
+        int m = matrix.size(), n = matrix[0].size();
+        int i = 0, j = n - 1; // 右上角的元素
+        while (i < m && j >= 0) {
+            if (target == matrix[i][j])
+                return true;
+            else if (target > matrix[i][j])
+                i++;
+            else
+                j--;
+        }
+        return false;
+    }
+};
 
 // link : https://leetcode.cn/problems/search-a-2d-matrix/description/?envType=study-plan-v2&envId=top-100-liked
