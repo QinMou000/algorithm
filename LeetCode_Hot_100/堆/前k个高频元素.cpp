@@ -1,17 +1,16 @@
 class Solution {
-public:
+  public:
     // 用堆解决
-    vector<int> topKFrequent(vector<int>& nums, int k) {
+    vector<int> topKFrequent(vector<int> &nums, int k) {
         // 数字和出现次数的映射
         unordered_map<int, int> map;
         for (auto e : nums)
             map[e]++;
-        auto com = [](const pair<int, int>& x, const pair<int, int>& y) {
+        auto com = [](const pair<int, int> &x, const pair<int, int> &y) {
             return x.second > y.second; // 用 second 做比较 小顶堆
         };
         // 自定义比较函数
-        priority_queue<pair<int, int>, vector<pair<int, int>>, decltype(com)>
-            pir_q;
+        priority_queue<pair<int, int>, vector<pair<int, int>>, decltype(com)> pir_q;
         for (auto kv : map) {
             pir_q.push(kv); // 将 kv push 进优先级队列
             // 因为我们只要前k个 如果当前堆大小大于等于k就pop
@@ -44,6 +43,32 @@ public:
     //         ans.push_back(arr[i].first);
     //     return ans;
     // }
+};
+
+// 第二遍写：
+class Solution {
+  public:
+    static bool cmp(const pair<int, int> &x, const pair<int, int> &y) { return x.second > y.second; }
+    vector<int> topKFrequent(vector<int> &nums, int k) {
+        unordered_map<int, int> cnt; // 数字, 次数
+        for (int e : nums)
+            cnt[e]++;
+
+        // 这里的decltype 只是拿到&cmp的类型传给模版
+        priority_queue<pair<int, int>, vector<pair<int, int>>, decltype(&cmp)> q(cmp);
+
+        for (auto kv : cnt) {
+            q.push(kv);
+            if (q.size() > k)
+                q.pop();
+        }
+        vector<int> ans;
+        while (!q.empty()) {
+            ans.push_back(q.top().first);
+            q.pop();
+        }
+        return ans;
+    }
 };
 
 // link : https://leetcode.cn/problems/top-k-frequent-elements/?envType=study-plan-v2&envId=top-100-liked
