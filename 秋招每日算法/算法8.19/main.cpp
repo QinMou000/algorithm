@@ -208,6 +208,24 @@ public:
         }
         return dp[n - 1];
     }
+    // 22. 括号生成
+    std::vector<string> generateParenthesis(int n) {
+        std::vector<string> ans;
+        std::function<void(string output, int l, int r)> dfs = 
+        [&](string output, int l, int r) {
+            if (r > l || l > n)
+                return;
+            if (r == n && l == n) {
+                ans.emplace_back(output);
+                return;
+            }
+            dfs(output + "(", l + 1, r);
+            dfs(output + ")", l, r + 1);
+        };
+        string output = "";
+        dfs(output, 0, 0);
+        return ans;
+    }
 };
 
 
