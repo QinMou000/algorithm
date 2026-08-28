@@ -186,9 +186,15 @@ void reorderList(ListNode *head) {
 }
 
 int main() {
-    string s = "Hello, World!";
-    next_permutation(s.begin(), s.end());
-    cout << s << endl;
+    // string s = "Hello, World!";
+    // next_permutation(s.begin(), s.end());
+    // cout << s << endl;
+
+    // int *n = new int(3);
+    // shared_ptr<int> ptr1 = n;
+    // shared_ptr<int> ptr2 = shared_ptr<int>(n);
+    // shared_ptr<int> ptr3(new int(1));
+
 
     return 0;
 }
