@@ -147,7 +147,6 @@ public:
     }
 };
 
-
 int main() {
     string s;
     // random_device 从操作系统获取真随机数做种子
