@@ -91,8 +91,131 @@ int evalRPN(vector<string> &tokens) {
     }
     return stk.top();
 }
+ // 01背包
+#include <cstring>
+using namespace std;
+
+const int N = 1005;
+
+int n, V;
+int v[N], w[N];
+
+int dp[N][N]; // 在前i个物品中选择不超过j大小的物品 && 得到的价值最大
 
 int main() {
-    std::cout << "Hello, World!" << std::endl;
+    cin >> n >> V;
+    for (int i = 0; i < n; i++)
+        cin >> v[i] >> w[i];
+
+    for (int i = 1; i <= n; i++)
+        for (int j = 1; j <= V; j++) {
+            // 不选择当前物品
+            dp[i][j] = dp[i - 1][j];
+            if (j >= v[i - 1]) {
+                // 选择当前物品 前提: j - v[i] > 0 说明有足够的空间
+                // 两者取最大值
+                dp[i][j] = max(dp[i][j], dp[i - 1][j - v[i - 1]] + w[i - 1]);
+            }
+        }
+    // for (int i = 0; i <= n; i++) {
+    //     for (int j = 0; j <= V; j++) {
+    //         cout << dp[i][j] << "\t";
+    //     }
+    //     cout << endl;
+    // }
+    cout << dp[n][V] << endl;
+    memset(dp, 0, sizeof(dp)); // 重新把dp表置零
+
+    // 此时dp[i][j]表示从前i个物品选恰好空间为j的物品的最大价值
+    // ddp[i][j] == -1 表示这无法实现
+
+    for (int j = 1; j <= V; j++)
+        dp[0][j] = -1;
+
+    for (int i = 1; i <= n; i++)
+        for (int j = 1; j <= V; j++) {
+            // 不选择当前物品
+            dp[i][j] = dp[i - 1][j];
+            if (j >= v[i - 1] && dp[i - 1][j - v[i - 1]] != -1) {
+                // 选择当前物品 前提: j - v[i] > 0 说明有足够的空间
+                // 两者取最大值
+                dp[i][j] = max(dp[i][j], dp[i - 1][j - v[i - 1]] + w[i - 1]);
+            }
+        }
+
+
+    // for (int i = 0; i <= n; i++) {
+    //     for (int j = 0; j <= V; j++) {
+    //         cout << dp[i][j] << "\t";
+    //     }
+    //     cout << endl;
+    // }
+
+    if (dp[n][V] == -1)
+        cout << 0 << endl;
+    else cout << dp[n][V] << endl;
+
     return 0;
 }
+
+// 轮转数组优化版本
+//
+// const int N = 1005;
+//
+// int n, V;
+// int v[N], w[N];
+//
+// int dp[N]; // 在前i个物品中选择不超过j大小的物品 && 得到的价值最大
+//
+// int main() {
+//     cin >> n >> V;
+//     for (int i = 0; i < n; i++)
+//         cin >> v[i] >> w[i];
+//
+//     for (int i = 1; i <= n; i++)
+//         for (int j = V; j >= 1; j--) {
+//             if (j >= v[i - 1]) {
+//                 // 选择当前物品 前提: j - v[i] > 0 说明有足够的空间
+//                 // 两者取最大值
+//                 dp[j] = max(dp[j], dp[j - v[i - 1]] + w[i - 1]);
+//             }
+//         }
+//     // for (int i = 0; i <= n; i++) {
+//     //     for (int j = 0; j <= V; j++) {
+//     //         cout << dp[i][j] << "\t";
+//     //     }
+//     //     cout << endl;
+//     // }
+//     cout << dp[V] << endl;
+//     memset(dp, 0, sizeof(dp)); // 重新把dp表置零
+//
+//     // 此时dp[i][j]表示从前i个物品选恰好空间为j的物品的最大价值
+//     // ddp[i][j] == -1 表示这无法实现
+//
+//     for (int j = 1; j <= V; j++)
+//         dp[j] = -1;
+//
+//     for (int i = 1; i <= n; i++)
+//         for (int j = V; j >= 1; j--) {
+//             // 不选择当前物品
+//             if (j >= v[i - 1] && dp[j - v[i - 1]] != -1) {
+//                 // 选择当前物品 前提: j - v[i] > 0 说明有足够的空间
+//                 // 两者取最大值
+//                 dp[j] = max(dp[j], dp[j - v[i - 1]] + w[i - 1]);
+//             }
+//         }
+//
+//
+//     // for (int i = 0; i <= n; i++) {
+//     //     for (int j = 0; j <= V; j++) {
+//     //         cout << dp[i][j] << "\t";
+//     //     }
+//     //     cout << endl;
+//     // }
+//
+//     if (dp[V] == -1)
+//         cout << 0 << endl;
+//     else cout << dp[V] << endl;
+//
+//     return 0;
+// }
