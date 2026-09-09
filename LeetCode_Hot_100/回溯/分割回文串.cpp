@@ -34,13 +34,13 @@
 // };
 
 class Solution {
-public:
+  public:
     vector<vector<string>> partition(string s) {
         vector<vector<string>> ans;
         vector<string> output;
         int n = s.size();
         // 当前串未被分割的部分为 [pos ~ n-1]
-        auto dfs = [&](this auto&& dfs, int pos) {
+        auto dfs = [&](this auto &&dfs, int pos) {
             if (pos == n) {
                 ans.emplace_back(output);
                 return;
@@ -67,5 +67,40 @@ public:
     }
 };
 
-// https://leetcode.cn/problems/palindrome-partitioning/description/?envType=study-plan-v2&envId=top-100-liked
+// 第二遍写：
+class Solution {
+  public:
+    vector<vector<string>> partition(string s) {
+        vector<vector<string>> ans;
+        vector<string> output;
 
+        int n = s.size();
+        auto dfs = [&](this auto &&dfs, int pos) {
+            if (pos == n) {
+                ans.emplace_back(output);
+                return;
+            }
+            for (int i = pos; i < n; i++) {
+                string tmp = s.substr(pos, i - pos + 1);
+                if (check(tmp)) {
+                    output.emplace_back(tmp);
+                    dfs(i + 1);
+                    output.pop_back();
+                }
+            }
+        };
+        dfs(0);
+        return ans;
+    }
+    bool check(string s) {
+        int n = s.size();
+        int l = 0, r = n - 1;
+        while (l < r) {
+            if (s[l++] != s[r--])
+                return false;
+        }
+        return true;
+    }
+};
+
+// https://leetcode.cn/problems/palindrome-partitioning/description/?envType=study-plan-v2&envId=top-100-liked
