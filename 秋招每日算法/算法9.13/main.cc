@@ -137,3 +137,89 @@ int threeSumClosest(vector<int> &nums, int target) {
     }
     return ans;
 }
+
+// 394. 字符串解码
+string decodeString(string s) {
+    // [ 把当前倍数、当前已经攒好的字符串压栈 清空 res 和 time
+    // 用来收集括号内部字符
+    // ] 弹出栈 把括号内收集到的res重复倍数次
+    // 拼回旧字符串 赋值给 res
+    int times = 0;
+    string res = "";
+    stack<pair<string, int>> stk; // res,times
+    for (auto c : s) {
+        if (c >= '0' && c <= '9') {
+            times = times * 10 + c - '0';
+        } else if (c >= 'a' && c <= 'z') {
+            res += c;
+        } else if (c == '[') {
+            stk.push(make_pair(res, times));
+            res = "";
+            times = 0;
+        } else if (c == ']') {
+            string tmp;
+            auto Pair = stk.top();
+            stk.pop();
+            for (int i = 0; i < Pair.second; i++) {
+                tmp += res;
+            }
+            res = Pair.first + tmp;
+        }
+    }
+    return res;
+}
+
+// 46. 全排列
+vector<vector<int>> permute(vector<int> &nums) {
+    vector<vector<int>> ans;
+    function<void(int pos, vector<int> out)> dfs = [&](int pos, vector<int> out) {
+        if (pos == nums.size() - 1) {
+            ans.emplace_back(out);
+            return;
+        }
+        for (int i = pos; i < nums.size(); i++) {
+            swap(out[pos], out[i]);
+            dfs(pos + 1, out);
+            swap(out[pos], out[i]);
+        }
+    };
+    dfs(0, nums);
+    return ans;
+}
+
+struct ListNode {
+    int val;
+    ListNode *next;
+    ListNode() : val(0), next(nullptr) {}
+    ListNode(int x) : val(x), next(nullptr) {}
+    ListNode(int x, ListNode *next) : val(x), next(next) {}
+};
+
+// 23. 合并 K 个升序链表
+ListNode *Merge(ListNode *l1, ListNode *l2) {
+    ListNode *dump = new ListNode(-1);
+    ListNode *cur = dump;
+    while (l1 && l2) {
+        if (l1->val < l2->val) {
+            cur->next = l1;
+            l1 = l1->next;
+        } else {
+            cur->next = l2;
+            l2 = l2->next;
+        }
+        cur = cur->next;
+    }
+    if (l1)
+        cur->next = l1;
+    if (l2)
+        cur->next = l2;
+    return dump->next;
+}
+
+ListNode *mergeKLists(vector<ListNode *> &lists) {
+    ListNode *head = nullptr;
+    for (auto list : lists) {
+        head = Merge(head, list);
+    }
+    return head;
+}
