@@ -223,3 +223,161 @@ ListNode *mergeKLists(vector<ListNode *> &lists) {
     }
     return head;
 }
+
+// 8. 字符串转换整数 (atoi)
+int myAtoi(string s) {
+    int i = 0;
+    int n = s.size();
+    while (i < n) {
+        if (s[i] == ' ')
+            i++;
+        else
+            break;
+    }
+
+    int flag = 1;
+    if (s[i] == '-') {
+        flag = -1;
+        i++;
+    } else if (s[i] == '+')
+        i++;
+
+    long long ans = 0;
+    while (i < n) {
+        if (s[i] < '0' || s[i] > '9')
+            break;
+        ans = ans * 10 + s[i] - '0';
+        if (flag == 1 && ans > INT_MAX)
+            return INT_MAX;
+        if (flag == -1 && ans > (long long)INT_MAX + 1)
+            return INT_MIN;
+        i++;
+    }
+    return ans * flag;
+}
+
+// 142. 环形链表 II
+ListNode *detectCycle(ListNode *head) {
+    ListNode *fast = head;
+    ListNode *slow = head;
+    while (fast && fast->next) {
+        fast = fast->next->next;
+        slow = slow->next;
+        if (fast == slow) {
+            fast = head;
+            while (fast != slow) {
+                fast = fast->next;
+                slow = slow->next;
+            }
+            return fast;
+        }
+    }
+    return nullptr;
+}
+
+// 398. 随机数索引
+class Solution {
+  public:
+    unordered_map<int, vector<int>> map;
+    Solution(vector<int> &nums) {
+        for (int i = 0; i < nums.size(); i++) {
+            map[nums[i]].push_back(i);
+        }
+    }
+
+    int pick(int target) {
+        vector<int> res = map[target];
+        return res[rand() % res.size()];
+    }
+};
+
+// 150. 逆波兰表达式求值
+int evalRPN(vector<string> &tokens) {
+    stack<int> stk;
+
+    for (auto token : tokens) {
+        char c = token[0];
+        if (token.size() > 1 || isdigit(c)) {
+            stk.push(stoi(token));
+            continue;
+        }
+        int x = stk.top();
+        stk.pop();
+        if (c == '+')
+            stk.top() += x;
+        if (c == '-')
+            stk.top() -= x;
+        if (c == '*')
+            stk.top() *= x;
+        if (c == '/')
+            stk.top() /= x;
+    }
+    return stk.top();
+}
+
+// 逆波兰表达式 → 中缀表达式（会自动补括号保证优先级正确）
+string rpnToInfix(vector<string>& tokens) {
+    stack<string> stk;
+    for (auto& token : tokens) {
+        // 数字：直接压入字符串
+        if (token.size()>1 || isdigit(token[0])) {
+            stk.push(token);
+            continue;
+        }
+        // 运算符：弹出右操作数b，再弹出左操作数a
+        string b = stk.top(); stk.pop();
+        string a = stk.top(); stk.pop();
+        // 包裹括号，规避运算符优先级错误
+        string expr = "(" + a + token + b + ")";
+        stk.push(expr);
+    }
+    return stk.top();
+}
+
+// 获取运算符优先级
+int priority(char op) {
+    if(op == '*' || op == '/') return 2;
+    if(op == '+' || op == '-') return 1;
+    return 0; // '('
+}
+
+vector<string> infixToRPN(const string &s) {
+    vector<string> output;
+    stack<char> opStk;
+    int n = s.size();
+    int i = 0;
+    while(i < n) {
+        char ch = s[i];
+        if(isdigit(ch)) {
+            // 处理多位数
+            int j = i;
+            while(j < n && isdigit(s[j])) j++;
+            output.push_back(s.substr(i, j-i));
+            i = j;
+        } else if(ch == '(') {
+            opStk.push(ch);
+            i++;
+        } else if(ch == ')') {
+            while(opStk.top() != '(') {
+                output.push_back(string(1, opStk.top()));
+                opStk.pop();
+            }
+            opStk.pop(); //弹出'('丢弃
+            i++;
+        } else {
+            // +-*/ 运算符
+            while(!opStk.empty() && priority(opStk.top()) >= priority(ch)) {
+                output.push_back(string(1, opStk.top()));
+                opStk.pop();
+            }
+            opStk.push(ch);
+            i++;
+        }
+    }
+    // 剩余运算符全部输出
+    while(!opStk.empty()) {
+        output.push_back(string(1, opStk.top()));
+        opStk.pop();
+    }
+    return output;
+}
