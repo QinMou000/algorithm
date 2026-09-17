@@ -316,17 +316,19 @@ int evalRPN(vector<string> &tokens) {
 }
 
 // 逆波兰表达式 → 中缀表达式（会自动补括号保证优先级正确）
-string rpnToInfix(vector<string>& tokens) {
+string rpnToInfix(vector<string> &tokens) {
     stack<string> stk;
-    for (auto& token : tokens) {
+    for (auto &token : tokens) {
         // 数字：直接压入字符串
-        if (token.size()>1 || isdigit(token[0])) {
+        if (token.size() > 1 || isdigit(token[0])) {
             stk.push(token);
             continue;
         }
         // 运算符：弹出右操作数b，再弹出左操作数a
-        string b = stk.top(); stk.pop();
-        string a = stk.top(); stk.pop();
+        string b = stk.top();
+        stk.pop();
+        string a = stk.top();
+        stk.pop();
         // 包裹括号，规避运算符优先级错误
         string expr = "(" + a + token + b + ")";
         stk.push(expr);
@@ -336,8 +338,10 @@ string rpnToInfix(vector<string>& tokens) {
 
 // 获取运算符优先级
 int priority(char op) {
-    if(op == '*' || op == '/') return 2;
-    if(op == '+' || op == '-') return 1;
+    if (op == '*' || op == '/')
+        return 2;
+    if (op == '+' || op == '-')
+        return 1;
     return 0; // '('
 }
 
@@ -346,27 +350,28 @@ vector<string> infixToRPN(const string &s) {
     stack<char> opStk;
     int n = s.size();
     int i = 0;
-    while(i < n) {
+    while (i < n) {
         char ch = s[i];
-        if(isdigit(ch)) {
+        if (isdigit(ch)) {
             // 处理多位数
             int j = i;
-            while(j < n && isdigit(s[j])) j++;
-            output.push_back(s.substr(i, j-i));
+            while (j < n && isdigit(s[j]))
+                j++;
+            output.push_back(s.substr(i, j - i));
             i = j;
-        } else if(ch == '(') {
+        } else if (ch == '(') {
             opStk.push(ch);
             i++;
-        } else if(ch == ')') {
-            while(opStk.top() != '(') {
+        } else if (ch == ')') {
+            while (opStk.top() != '(') {
                 output.push_back(string(1, opStk.top()));
                 opStk.pop();
             }
-            opStk.pop(); //弹出'('丢弃
+            opStk.pop(); // 弹出'('丢弃
             i++;
         } else {
             // +-*/ 运算符
-            while(!opStk.empty() && priority(opStk.top()) >= priority(ch)) {
+            while (!opStk.empty() && priority(opStk.top()) >= priority(ch)) {
                 output.push_back(string(1, opStk.top()));
                 opStk.pop();
             }
@@ -375,9 +380,107 @@ vector<string> infixToRPN(const string &s) {
         }
     }
     // 剩余运算符全部输出
-    while(!opStk.empty()) {
+    while (!opStk.empty()) {
         output.push_back(string(1, opStk.top()));
         opStk.pop();
     }
     return output;
+}
+
+// 70. 爬楼梯
+int climbStairs(int n) {
+    vector<int> dp(n + 1, 0);
+    dp[1] = 1;
+    if (n < 2)
+        return dp[1];
+    dp[2] = 2;
+    for (int i = 3; i <= n; i++) {
+        dp[i] = dp[i - 1] + dp[i - 2];
+    }
+    return dp[n];
+}
+
+// 377. 组合总和 Ⅳ
+int combinationSum4(vector<int> &nums, int target) {
+    int n = nums.size();
+    vector<long long> dp(target + 1, 0); // 和为 i 的方案有 dp[i] 个
+    dp[0] = 1;                           // 和为0的方案有一个 就是什么都不选
+    for (int i = 1; i <= target; i++) {
+        for (auto e : nums) {
+            if (i - e >= 0 && dp[i - e] + dp[i] <= INT_MAX)
+                dp[i] += dp[i - e];
+        }
+    }
+    return dp[target];
+}
+
+// 452. 用最少数量的箭引爆气球
+int findMinArrowShots(vector<vector<int>> &points) {
+    int n = points.size();
+    int ans = 0;
+    sort(points.begin(), points.end(), [](const vector<int> &v1, const vector<int> &v2) { return v1[1] < v2[1]; });
+    int shot = points[0][1]; // 第一支箭
+
+    for (auto ball : points) {
+        if (ball[0] > shot) { // 左端点小于箭坐标 说明覆盖不了
+            ans++;
+            shot = ball[1];
+        }
+    }
+    return ans + 1;
+}
+
+// 139. 单词拆分
+bool wordBreak(string s, vector<string> &wordDict) {
+    unordered_map<string, int> cnt;
+    for (auto &s : wordDict) {
+        cnt[s]++;
+    }
+    int n = s.size();
+    vector<bool> dp(n + 1); // 字符串中 0-i （不）可以被dict中的拼接
+    dp[0] = true;
+    for (int i = 1; i <= n; i++) {
+        // j 为单词的起始位置
+        for (int j = 0; j < i; j++) {
+            dp[i] = dp[j] & cnt.count(s.substr(j, i - j));
+            if (dp[i] == true)
+                break; // 可以拼接 无需后续判断
+        }
+    }
+    return dp[n];
+}
+
+// 96. 不同的二叉搜索树
+
+// int numTrees(int n) {
+//     long long ans = 1;
+//     for (int i = 0; i < n; i++) {
+//         ans = ans * 2 * (2 * i + 1) / (i + 2);
+//     }
+//     return (int)ans;
+// }
+int numTrees(int n) {
+    /*
+    dp[i] = i个不同的数组成的二叉搜索数的个数
+    假设 i = 5
+    当根节点等于 1 时 ，其余数字都比1大，只能在右边
+    dp[i] += dp[4]
+    当根节点等于 2 时，左边有一个1比2小，右边有三个比2大的数字
+    dp[i] += dp[1] * dp[3]
+    当根节点等于 3时，左边有两个数比3小，右边有两个数比3大的数字
+    dp[i] += dp[2] * dp[2]
+    知道根节点等于5，左边有4个数字比5小，只能放在5的左边
+    dp[i] += dp[4]
+     */
+    vector<int> dp(n + 1);
+    dp[0] = 1; // 空结构也算一种情况
+    dp[1] = 1;
+    for (int i = 2; i <= n; i++) {
+        for (int j = 1; j <= i; j++) {
+            int l = dp[j - 1];
+            int r = dp[i - j];
+            dp[i] += l * r;
+        }
+    }
+    return dp[n];
 }
