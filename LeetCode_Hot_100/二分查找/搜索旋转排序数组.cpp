@@ -1,6 +1,6 @@
 class Solution {
-public:
-    int search(vector<int>& nums, int target) {
+  public:
+    int search(vector<int> &nums, int target) {
         int left = 0, right = nums.size() - 1;
 
         while (left <= right) {
@@ -18,9 +18,8 @@ public:
                     left = mid + 1;
             } else { // [mid right] 有序
                 // 如果 target 在 [mid right] 这个有序区间
-                if (target > nums[mid] &&
-                    target <= nums[right]) { // left 和 right 是闭区间
-                                             // 所以边界需要判断
+                if (target > nums[mid] && target <= nums[right]) { // left 和 right 是闭区间
+                                                                   // 所以边界需要判断
                     left = mid + 1;
                 } else
                     right = mid - 1;
@@ -54,3 +53,35 @@ public:
 // 但实际上数组 [3,1] 的左半区（只有一个元素）是有序的，我们应该在左边找 target
 // = 3。 因为条件用了 <，程序会误认为“右边有序”，结果错误地去右边找，找不到返回
 // -1。
+
+// 第二遍写：
+class Solution {
+  public:
+    int search(vector<int> &nums, int target) {
+        int n = nums.size();
+        int l = 0, r = n - 1;
+        while (l <= r) {
+            int m = l + ((r - l) >> 1);
+            if (nums[m] == target)
+                return m;
+            if (nums[l] <= nums[m]) {
+                // 左半区有序
+                if (target >= nums[l] && target <= nums[m]) {
+                    // tar 在左半区
+                    r = m - 1;
+                } else {
+                    l = m + 1;
+                }
+            } else if (nums[l] > nums[m]) {
+                // 右半区有序
+                if (target >= nums[m] && target <= nums[r]) {
+                    // tar 落在右半区
+                    l = m + 1;
+                } else {
+                    r = m - 1;
+                }
+            }
+        }
+        return -1;
+    }
+};
