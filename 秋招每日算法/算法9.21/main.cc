@@ -81,3 +81,91 @@ vector<int> sortArray(vector<int> &nums) {
     QuickSort(nums, 0, nums.size() - 1);
     return nums;
 }
+
+// 124. 二叉树中的最大路径和
+int ans = INT_MIN;
+// 求单边最大路径
+int dfs(TreeNode *root) {
+    if (!root)
+        return 0;
+    int l = max(0, dfs(root->left));
+    int r = max(0, dfs(root->right));
+
+    ans = max(ans, l + r + root->val);
+
+    return max(l, r) + root->val;
+}
+int maxPathSum(TreeNode *root) {
+    dfs(root);
+    return ans;
+}
+
+// 416. 分割等和子集
+bool canPartition(vector<int> &nums) {
+    int sum = 0, max_num = 0;
+    for (auto e : nums) {
+        sum += e;
+        max_num = max(max_num, e);
+    }
+    if (sum % 2 == 1)
+        return false;
+    int target = sum / 2;
+    if (max_num > target)
+        return false;
+    int n = nums.size();
+    // 从前i个数里面取得的和能不能恰好等于j
+    vector<vector<bool>> dp(n + 1, vector<bool>(target + 1, false));
+    for (int i = 0; i <= n; i++)
+        dp[i][0] = true;
+    dp[1][nums[0]] = true;
+
+    for (int i = 1; i <= n; i++) {
+        for (int j = 1; j <= target; j++) {
+            dp[i][j] = dp[i - 1][j];
+            if (j - nums[i - 1] >= 0)
+                dp[i][j] = dp[i][j] | dp[i - 1][j - nums[i - 1]];
+        }
+    }
+    // cout << " \t";
+    // for (int j = 0; j <= target; j++)
+    //     cout << j << "\t";
+    // cout << endl;
+    // for (int i = 0; i <= n; i++) {
+    //     cout << i << "\t";
+    //     for (int j = 0; j <= target; j++) {
+    //         cout << dp[i][j] << "\t";
+    //     }
+    //     cout << endl;
+    // }
+    return dp[n][target];
+}
+
+// 200. 岛屿数量
+void dfs(vector<vector<char>> &grid, int i, int j) {
+    if (grid[i][j] == '1')
+        grid[i][j] = '0';
+    else
+        return;
+    if (i - 1 >= 0)
+        dfs(grid, i - 1, j);
+    if (i + 1 < grid.size())
+        dfs(grid, i + 1, j);
+    if (j - 1 >= 0)
+        dfs(grid, i, j - 1);
+    if (j + 1 < grid[0].size())
+        dfs(grid, i, j + 1);
+}
+int numIslands(vector<vector<char>> &grid) {
+    int ans = 0;
+    int m = grid.size(), n = grid[0].size();
+
+    for (int i = 0; i < m; i++) {
+        for (int j = 0; j < n; j++) {
+            if (grid[i][j] == '1') {
+                dfs(grid, i, j);
+                ans++;
+            }
+        }
+    }
+    return ans;
+}
