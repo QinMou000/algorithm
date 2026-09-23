@@ -169,3 +169,42 @@ int numIslands(vector<vector<char>> &grid) {
     }
     return ans;
 }
+
+// 137. 只出现一次的数字 II
+int singleNumber(vector<int> &nums) {
+    int ans = 0;
+    for (int i = 0; i < 32; i++) {
+        int cnt = 0;
+        for (auto e : nums) {
+            if ((1 << i) & e)
+                cnt++; // 对数组中每个数的i位做判断
+        }
+        if (cnt % 3 == 1) { // 不能被三整除 那答案的这个位就是1
+            ans |= 1 << i;
+        }
+    }
+    return ans;
+}
+
+// 32. 最长有效括号
+int longestValidParentheses(string s) {
+    stack<char> stk;
+    stk.push(-1);
+    int ans = 0;
+
+    for (int i = 0; i < s.size(); i++) {
+        if (s[i] == '(')
+            stk.push(i);
+        else {
+            stk.pop();
+            if (stk.empty()) {
+                // 栈为空 push新边界
+                stk.push(i);
+            } else {
+                // 栈不为空 更新目前最大结果
+                ans = max(ans, i - stk.top());
+            }
+        }
+    }
+    return ans;
+}
