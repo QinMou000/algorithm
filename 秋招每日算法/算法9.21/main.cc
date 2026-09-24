@@ -208,3 +208,162 @@ int longestValidParentheses(string s) {
     }
     return ans;
 }
+
+// 83. 删除排序链表中的重复元素
+ListNode *deleteDuplicates(ListNode *head) {
+    ListNode *cur = head;
+    while (cur && cur->next) {
+        if (cur->val == cur->next->val) {
+            ListNode *tmp = cur->next;
+            cur->next = cur->next->next;
+            delete tmp;
+        } else
+            cur = cur->next;
+    }
+    return head;
+}
+
+// 19. 删除链表的倒数第 N 个结点
+ListNode *removeNthFromEnd(ListNode *head, int n) {
+    ListNode *dump = new ListNode(-1, head);
+    ListNode *cur = dump;
+    int k = 0;
+    while (cur) {
+        k++;
+        cur = cur->next;
+    }
+    int step = k - n - 1;
+    cur = dump;
+    while (step--) {
+        cur = cur->next;
+    }
+    cur->next = cur->next->next;
+    return dump->next;
+}
+
+// 72. 编辑距离
+int minDistance(string word1, string word2) {
+    int m = word1.size(), n = word2.size();
+    // word1的前i个字母变化到word2的前j个字母的最小操作数
+    vector<vector<int>> dp(m + 1, vector<int>(n + 1));
+    dp[0][0] = 0;
+    for (int i = 1; i <= m; i++) {
+        dp[i][0] = i;
+    }
+    for (int j = 1; j <= n; j++) {
+        dp[0][j] = j;
+    }
+    for (int i = 1; i <= m; i++) {
+        for (int j = 1; j <= n; j++) {
+            if (word1[i - 1] != word2[j - 1]) {
+                dp[i][j] = min(min(dp[i - 1][j], dp[i][j - 1]), dp[i - 1][j - 1]) + 1;
+            } else {
+                dp[i][j] = dp[i - 1][j - 1];
+            }
+        }
+    }
+    return dp[m][n];
+}
+
+// 完全背包模板题
+
+// #include <iostream>
+// #include <vector>
+// #include <string.h>
+// using namespace std;
+
+// const int N = 1005;
+
+// int n, V;
+// int w[N];
+// int v[N];
+// int dp[N][N];
+
+// int main() {
+//     cin >> n >> V;
+
+//     for (int i = 1 ; i <= n; i++) {
+//         cin  >> v[i] >> w[i];
+//     }
+//     // 从前i个物品里面选择 最后体积不大于j 背包里面物品的最大价值
+//     for (int i = 1; i <= n; i++) {
+//         for (int j = 1; j <= V; j++) {
+//             dp[i][j] = dp[i - 1][j]; // 不选当前数
+//             if (j - v[i] >= 0) { // 选择当前数 但是可能不止选一次
+//                 dp[i][j] = max(dp[i][j], dp[i][j - v[i]] + w[i]);
+//             }
+//         }
+//     }
+//     cout << dp[n][V] << endl;
+
+//     memset(dp, 0, sizeof dp);
+
+//     // 从前i个物品里面选择 最后体积恰好等于j 背包里面物品的最大价值
+//     // 如果最后体积不能达到恰好等于j dp[i][j] = -1
+//     for (int j = 1; j <= V; j++) {
+//         dp[0][j] = -1;
+//     }
+
+//     for (int i = 1; i <= n; i++) {
+//         for (int j = 1; j <= V; j++) {
+//             dp[i][j] = dp[i - 1][j]; // 不选当前数
+//             // 选择当前数 但是可能不止选一次
+//             if (j - v[i] >= 0 && dp[i][j - v[i]] != -1) {
+//                 dp[i][j] = max(dp[i][j], dp[i][j - v[i]] + w[i]);
+//             }
+//         }
+//     }
+//     cout << ((dp[n][V] == -1) ? 0 : dp[n][V]) << endl;
+
+//     return 0;
+// }
+
+// 滚动数组做空间优化
+#include <iostream>
+#include <vector>
+#include <string.h>
+using namespace std;
+
+const int N = 1005;
+
+int n, V;
+int w[N];
+int v[N];
+int dp[N];
+
+int main() {
+    cin >> n >> V;
+
+    for (int i = 1 ; i <= n; i++) {
+        cin  >> v[i] >> w[i];
+    }
+    // 从前i个物品里面选择 最后体积不大于j 背包里面物品的最大价值
+    for (int i = 1; i <= n; i++) {
+        for (int j = 1; j <= V; j++) {
+            if (j - v[i] >= 0) { // 选择当前数 但是可能不止选一次
+                dp[j] = max(dp[j], dp[j - v[i]] + w[i]);
+            }
+        }
+    }
+    cout << dp[V] << endl;
+
+    memset(dp, 0, sizeof dp);
+
+    // 从前i个物品里面选择 最后体积恰好等于j 背包里面物品的最大价值
+    // 如果最后体积不能达到恰好等于j dp[i][j] = -1
+    for (int j = 1; j <= V; j++) {
+        dp[j] = -1;
+    }
+
+    for (int i = 1; i <= n; i++) {
+        for (int j = 1; j <= V; j++) {
+            // 选择当前数 但是可能不止选一次
+            if (j - v[i] >= 0 && dp[j - v[i]] != -1) {
+                dp[j] = max(dp[j], dp[j - v[i]] + w[i]);
+            }
+        }
+    }
+    cout << ((dp[V] == -1) ? 0 : dp[V]) << endl;
+
+    return 0;
+}
