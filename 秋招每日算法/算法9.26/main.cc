@@ -20,7 +20,7 @@ class Bitset {
     vector<uint8_t> nums;
     int cnt = 0;     // 1的个数
     int reserve = 0; // 翻转操作的次数 0:翻转偶数次 1 翻转奇数次
-    // 异或：相同为 0，不同为 1
+                     // 异或：相同为 0，不同为 1
   public:
     Bitset(int size) { nums.resize(size); }
 
@@ -69,3 +69,28 @@ class Bitset {
  * int param_6 = obj->count();
  * string param_7 = obj->toString();
  */
+
+// 105. 从前序与中序遍历序列构造二叉树
+class Solution {
+  public:
+    unordered_map<int, int> map; // 数字 中序遍历的下标
+    int pre_idx = 0;             // 前序遍历专用
+    // l r都是中序遍历专用
+    TreeNode *Helper(vector<int> &pre, int l, int r) {
+        if (l > r)
+            return nullptr;
+        TreeNode *node = new TreeNode(pre[pre_idx]);
+
+        int mid = map[pre[pre_idx]];
+        pre_idx++;
+        node->left = Helper(pre, l, mid - 1);
+        node->right = Helper(pre, mid + 1, r);
+        return node;
+    }
+    TreeNode *buildTree(vector<int> &preorder, vector<int> &inorder) {
+        for (int i = 0; i < inorder.size(); i++) {
+            map[inorder[i]] = i;
+        }
+        return Helper(preorder, 0, preorder.size() - 1);
+    }
+};
