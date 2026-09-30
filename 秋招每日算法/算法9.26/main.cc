@@ -250,3 +250,57 @@ class FreqStack {
     unordered_map<int, stack<int>> group; // 每个频率->栈
     int max_freq;                         // 当前出现频率的最大值
 };
+
+// 2446. 判断两个事件是否存在冲突
+bool haveConflict(vector<string> &event1, vector<string> &event2) {
+    if (event1[0] < event2[0])
+        return event1[1] >= event2[0];
+    else
+        return event2[1] >= event1[0];
+}
+
+// 54. 螺旋矩阵
+vector<int> spiralOrder(vector<vector<int>> &matrix) {
+    vector<int> ans;
+    if (matrix.empty())
+        return ans;
+    int m = matrix.size(), n = matrix[0].size();
+    int up = 0, down = m - 1, l = 0, r = n - 1;
+    while (true) {
+        for (int i = l; i <= r; i++)
+            ans.push_back(matrix[up][i]);
+        up++;
+        if (up > down)
+            break;
+        for (int i = up; i <= down; i++)
+            ans.push_back(matrix[i][r]);
+        r--;
+        if (l > r)
+            break;
+
+        for (int i = r; i >= l; i--)
+            ans.push_back(matrix[down][i]);
+        down--;
+        if (up > down)
+            break;
+
+        for (int i = down; i >= up; i--)
+            ans.push_back(matrix[i][l]);
+        l++;
+        if (l > r)
+            break;
+    }
+    return ans;
+}
+
+// 14. 最长公共前缀
+string longestCommonPrefix(vector<string> &str) {
+    sort(str.begin(), str.end());
+    string &s1 = str.front();
+    string &s2 = str.back();
+    int i = 0;
+    while (i < s1.size() && i < s2.size() && s1[i] == s2[i]) {
+        ++i;
+    }
+    return string(s1.begin(), s1.begin() + i);
+}
