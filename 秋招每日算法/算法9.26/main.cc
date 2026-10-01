@@ -304,3 +304,37 @@ string longestCommonPrefix(vector<string> &str) {
     }
     return string(s1.begin(), s1.begin() + i);
 }
+
+// 239. 滑动窗口最大值
+vector<int> maxSlidingWindow(vector<int> &nums, int k) {
+    priority_queue<pair<int, int>> pq; // 数, 下标
+    for (int i = 0; i < k; i++)        // 初始化窗口
+        pq.push(make_pair(nums[i], i));
+    vector<int> ans;
+    ans.push_back(pq.top().first); // 把第一个窗口的答案 push
+    for (int i = k; i < nums.size(); i++) {
+        pq.push(make_pair(nums[i], i)); // 压入后面元素
+        while (pq.top().second <= i - k) {
+            pq.pop(); // 只需判断堆顶元素的下标即可
+        }
+        ans.push_back(pq.top().first); // 每循环一次 追加答案
+    }
+    return ans;
+}
+
+// 152. 乘积最大子数组
+int maxProduct(vector<int> &nums) {
+    int n = nums.size();
+    if (n == 0)
+        return 0;
+    int Max, Min, ans;
+    Max = Min = ans = nums[0];
+    for (int i = 1; i < n; i++) {
+        int tmp = Max;
+        Max = max(max(Max * nums[i], Min * nums[i]), nums[i]);
+        Min = min(min(tmp * nums[i], Min * nums[i]), nums[i]);
+        ans = max(Max, ans);
+    }
+    return ans;
+}
+
