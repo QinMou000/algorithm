@@ -67,4 +67,49 @@ public:
     // }
 };
 
+// 第二遍写：
+// class Solution {
+// public:
+//     int findMin(vector<int>& nums) {
+//         int n = nums.size();
+//         int l = 0, r = n - 1;
+//         int tmp = nums[n - 1];
+//         while (l <= r) {
+//             int m = l + ((r - l) >> 1);
+//             if (nums[m] >= tmp) {
+//                 // mid落到阶跃位置的左边了
+//                 l = m + 1;
+//             } else if (nums[m] < tmp) {
+//                 // mid落到阶跃位置的右边了
+//                 r = m - 1;
+//             }
+//         }
+//         return nums[l];
+//     }
+// };
+
+class Solution {
+public:
+    int findMin(vector<int>& nums) {
+        int n = nums.size();
+        int l = 0, r = n - 1;
+        // 以最左边的元素为比较值,需要处理数组无阶跃的特殊情况
+        int tmp = nums[0];
+        // 特殊处理 : 判断数组有没有被旋转过
+        if (nums.back() >= tmp) // 除了n == 1的时候 正常情况不可能相等
+            return tmp;
+        while (l <= r) {
+            int m = l + ((r - l) >> 1);
+            if (nums[m] >= tmp) {
+                // mid落到阶跃位置的左边了
+                l = m + 1;
+            } else if (nums[m] < tmp) {
+                // mid落到阶跃位置的右边了
+                r = m - 1;
+            }
+        }
+        return nums[l];
+    }
+};
+
 // link : https://leetcode.cn/problems/find-minimum-in-rotated-sorted-array/description/?envType=study-plan-v2&envId=top-100-liked
