@@ -22,3 +22,25 @@ int firstMissingPositive(vector<int> &nums) {
     // 否则返回 n + 1
     return n + 1;
 }
+
+// 611. 有效三角形的个数
+int triangleNumber(vector<int> &nums) {
+    int ans = 0, n = nums.size();
+    // l:最短边 r:中间边 i:最长边
+    // 最短边与中间边之和大于最长边
+    // 那么由于数组有序 从 left + 1 到 right 的所有元素都满足条件
+    // else 否则说明短边太小 需要右移 left
+    ranges::sort(nums);
+    for (int i = n - 1; i >= 2; i--) {
+        int l = 0, r = i - 1;
+        while (l < r) {
+            if (nums[l] + nums[r] > nums[i]) {
+                ans += r - l;
+                r--;
+            } else {
+                l++;
+            }
+        }
+    }
+    return ans;
+}
