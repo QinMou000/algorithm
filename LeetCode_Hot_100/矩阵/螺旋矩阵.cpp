@@ -1,6 +1,6 @@
 class Solution {
-public:
-    vector<int> spiralOrder(vector<vector<int>>& matrix) {
+  public:
+    vector<int> spiralOrder(vector<vector<int>> &matrix) {
         int m = matrix.size();
         int n = matrix[0].size();
 
@@ -25,6 +25,35 @@ public:
             for (int i = d; i >= u; i--) // 向上
                 ans.push_back(matrix[i][l]);
             if (++l > r) // 重新设定左边界
+                break;
+        }
+        return ans;
+    }
+};
+
+// 第二遍写：
+class Solution {
+  public:
+    vector<int> spiralOrder(vector<vector<int>> &matrix) {
+        int m = matrix.size(), n = matrix[0].size();
+        int l = 0, r = n - 1, d = m - 1, u = 0;
+        vector<int> ans;
+        while (true) {
+            for (int i = l; i <= r; i++)
+                ans.push_back(matrix[u][i]);
+            if (++u > d)
+                break;
+            for (int i = u; i <= d; i++)
+                ans.push_back(matrix[i][r]);
+            if (--r < l)
+                break;
+            for (int i = r; i >= l; i--)
+                ans.push_back(matrix[d][i]);
+            if (--d < u)
+                break;
+            for (int i = d; i >= u; i--)
+                ans.push_back(matrix[i][l]);
+            if (++l > d)
                 break;
         }
         return ans;
