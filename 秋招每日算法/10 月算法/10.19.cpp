@@ -72,3 +72,40 @@ vector<string> topKFrequent(vector<string> &words, int k) {
     reverse(ans.begin(), ans.end());
     return ans;
 }
+
+// 21. 合并两个有序链表
+ListNode *mergeTwoLists(ListNode *list1, ListNode *list2) {
+    ListNode *dump = new ListNode(-1);
+    ListNode *cur = dump;
+    while (list1 && list2) {
+        if (list1->val > list2->val) {
+            cur->next = list2;
+            list2 = list2->next;
+        } else {
+            cur->next = list1;
+            list1 = list1->next;
+        }
+        cur = cur->next;
+    }
+    if (list1)
+        cur->next = list1;
+    if (list2)
+        cur->next = list2;
+    return dump->next;
+}
+
+// 334. 递增的三元子序列
+bool increasingTriplet(vector<int> &nums) {
+    // first : 最小的数 second : 第二小的数
+    // 一边更新 first second 一边找 有没有数字 n > second
+    int first = INT_MAX, second = INT_MAX;
+    for (int n : nums) {
+        if (n <= first)
+            first = n;
+        else if (n <= second)
+            second = n;
+        else
+            return true;
+    }
+    return false;
+}
