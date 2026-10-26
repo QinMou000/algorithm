@@ -27,3 +27,58 @@ bool check(string s) {
     }
     return true;
 }
+
+// 221. 最大正方形
+int maximalSquare(vector<vector<char>> &matrix) {
+    int m = matrix.size(), n = matrix[0].size();
+    // 以 i j 为正方形的右下角 最大正方形的边长
+    vector<vector<int>> dp(m + 1, vector<int>(n + 1, 0));
+    int ans = 0;
+    for (int i = 1; i <= m; i++) {
+        for (int j = 1; j <= n; j++) {
+            if (matrix[i - 1][j - 1] == '1')
+                dp[i][j] = min(min(dp[i - 1][j], dp[i][j - 1]), dp[i - 1][j - 1]) + 1;
+            ans = max(ans, dp[i][j] * dp[i][j]);
+        }
+    }
+    return ans;
+}
+
+// 516. 最长回文子序列
+
+// int longestPalindromeSubseq(string s) {
+//     // 在 i-j 之间的最长回文子序列的长度为 dp[i][j]
+//     int n = s.size();
+//     vector<vector<int>> dp(n, vector<int>(n, 0));
+//     for (int i = n - 1; i >= 0; i--) {
+//         dp[i][i] = 1; // 每一个字符都是长度为 1 的回文串
+//         for (int j = i + 1; j < n; j++) {
+//             if (s[i] == s[j])
+//                 dp[i][j] = dp[i + 1][j - 1] + 2;
+//             else
+//                 dp[i][j] = max(dp[i][j - 1], dp[i + 1][j]);
+//         }
+//     }
+//     return dp[0][n - 1];
+// }
+
+// 空间优化
+int longestPalindromeSubseq(string s) {
+    // 在 i-j 之间的最长回文子序列的长度为 dp[i][j]
+    int n = s.size();
+    vector<int> dp(n, 0);
+    int tmp = 0;
+    for (int i = n - 1; i >= 0; i--) {
+        dp[i] = 1; // 每一个字符都是长度为 1 的回文串
+        int prev = 0;
+        for (int j = i + 1; j < n; j++) {
+            int tmp = dp[j];
+            if (s[i] == s[j])
+                dp[j] = prev + 2;
+            else
+                dp[j] = max(dp[j - 1], dp[j]);
+            prev = tmp;
+        }
+    }
+    return dp[n - 1];
+}
