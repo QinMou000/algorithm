@@ -82,3 +82,38 @@ int longestPalindromeSubseq(string s) {
     }
     return dp[n - 1];
 }
+
+// 82. 删除排序链表中的重复元素 II
+ListNode *deleteDuplicates(ListNode *head) {
+    ListNode *dump = new ListNode((int)0x3f3f3f3f, head);
+    ListNode *cur = dump;
+    ListNode *prev = nullptr;
+    while (cur && cur->next) {
+        if (cur->val == cur->next->val) {
+            while (cur->next && cur->val == cur->next->val) {
+                cur->next = cur->next->next;
+            }
+            prev->next = cur->next;
+            cur = cur->next;
+        } else {
+            prev = cur;
+            cur = cur->next;
+        }
+    }
+    return dump->next;
+}
+
+// 240. 搜索二维矩阵 II
+bool searchMatrix(vector<vector<int>> &matrix, int target) {
+    int m = matrix.size(), n = matrix[0].size();
+    int i = 0, j = n - 1;
+    while (i < m && j >= 0) {
+        if (target == matrix[i][j])
+            return true;
+        else if (matrix[i][j] > target)
+            j--;
+        else
+            i++;
+    }
+    return false;
+}
