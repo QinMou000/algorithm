@@ -52,3 +52,29 @@ public:
         return ans;
     }
 };
+
+// 第三遍写：
+class Solution {
+public:
+    vector<int> maxSlidingWindow(vector<int>& nums, int k) {
+        priority_queue<pair<int, int>> pq; // 元素->下标 单调递减队列 队头值最大
+        vector<int> ans;
+        for (int i = 0; i < k; i++)
+            pq.push({nums[i], i});
+        ans.push_back(pq.top().first); // 更新第一个窗口最大值
+        for (int i = k; i < nums.size(); i++) {
+            // 入窗口
+            pq.push({nums[i], i});
+
+            // 因为priority_queue无法删除队尾数据
+            // 我们只需要判断当前队头（最大值）是否在当前窗口即可
+            // 不在窗口就删除队头
+            while (pq.top().second <= i - k)
+                pq.pop();
+
+            // 更新结果
+            ans.push_back(pq.top().first);
+        }
+        return ans;
+    }
+};
