@@ -117,3 +117,76 @@ bool searchMatrix(vector<vector<int>> &matrix, int target) {
     }
     return false;
 }
+
+// 139. 单词拆分
+bool wordBreak(string s, vector<string> &wordDict) {
+    unordered_map<string, int> cnt;
+    for (auto &str : wordDict)
+        cnt[str]++;
+    int n = s.size();
+    // 0-i 字符串能否由wordDict拼接
+    vector<bool> dp(n + 1, false);
+    dp[0] = true;
+    for (int i = 1; i <= n; i++) {
+        // j 为单词起始位置 i 为结束位置
+        for (int j = 0; j < i; j++) {
+            dp[i] = dp[j] & (cnt.count(s.substr(j, i - j)) > 0);
+            if (dp[i] == true)
+                break;
+        }
+    }
+    return dp[n];
+}
+
+// 17. 电话号码的字母组合
+vector<string> map{"", "", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"};
+vector<string> letterCombinations(string digits) {
+    vector<string> ans;
+    string path = "";
+    function<void(int)> dfs = [&](int pos) {
+        if (pos == digits.size()) {
+            ans.emplace_back(path);
+            return;
+        }
+        string tmp = map[digits[pos] - '0'];
+        for (auto c : tmp) {
+            path += c;
+            dfs(pos + 1);
+            path.pop_back();
+        }
+    };
+    dfs(0);
+    return ans;
+}
+
+// 215. 数组中的第K个最大元素
+int findKthLargest(vector<int> &nums, int k) {
+    int n = nums.size();
+    int l = 0, r = n - 1;
+    while (l <= r) {
+        // 每次排除一半的元素
+        int mid = QuickSort(nums, l, r);
+        if (mid == n - k)
+            return nums[mid];
+        else if (mid > n - k)
+            r = mid - 1;
+        else
+            l = mid + 1;
+    }
+    return -1;
+}
+int QuickSort(vector<int> &nums, int left, int right) {
+    int randIndex = rand() % (left - left + 1) + left;
+    swap(nums[randIndex], nums[left]);
+    int privot = nums[left];
+    int l = left, r = right;
+    while (l < r) {
+        while (l < r && nums[r] >= privot)
+            r--;
+        while (l < r && nums[l] <= privot)
+            l++;
+        swap(nums[l], nums[r]);
+    }
+    swap(nums[left], nums[l]);
+    return l;
+}
