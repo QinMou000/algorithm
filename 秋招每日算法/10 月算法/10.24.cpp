@@ -190,3 +190,50 @@ int QuickSort(vector<int> &nums, int left, int right) {
     swap(nums[left], nums[l]);
     return l;
 }
+
+// 2. 两数相加
+ListNode *addTwoNumbers(ListNode *l1, ListNode *l2) {
+    ListNode *dump = new ListNode(-1);
+    ListNode *cur = dump;
+    int carry = 0;
+    while (l1 || l2) {
+        int num = 0;
+        if (l1) {
+            num += l1->val;
+            l1 = l1->next;
+        }
+        if (l2) {
+            num += l2->val;
+            l2 = l2->next;
+        }
+        num += carry;
+        carry = num / 10;
+        num = num % 10;
+        cur->next = new ListNode(num);
+        cur = cur->next;
+    }
+    if (carry)
+        cur->next = new ListNode(carry);
+    return dump->next;
+}
+
+// 128. 最长连续序列
+int longestConsecutive(vector<int> &nums) {
+    unordered_set<int> cnt(nums.begin(), nums.end());
+    int ans = 0;
+    for (auto e : nums) {
+        if (!cnt.count(e - 1)) {
+            // cnt 中没有 e : e 为一个新的开头
+            int cur = e + 1, len = 1;
+            while (cnt.count(cur)) {
+                cur++, len++;
+            }
+            ans = max(ans, len);
+            // 如果当前的链大于整个hash的一半，那就不可能还有另外一个答案
+            // 如果有，那么总和就超过了整个set的大小
+            if (ans > nums.size() / 2)
+                return ans;
+        }
+    }
+    return ans;
+}
