@@ -120,5 +120,33 @@ public:
     }
 };
 
+// 第三遍写：
+class Solution {
+public:
+    int Binsearch(vector<int>& nums, int target) {
+        int n = nums.size();
+        int left = 0, right = n - 1;
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            if (nums[mid] >= target)
+                right = mid - 1;
+            else
+                left = mid + 1;
+        }
+        return left;
+    }
+
+    vector<int> searchRange(vector<int>& nums, int target) {
+        if (!nums.size())
+            return {-1, -1};
+
+        int l = Binsearch(nums, target);
+        if (l >= nums.size() || nums[l] != target)
+            return {-1, -1};
+        int r = Binsearch(nums, target + 1);
+        return {l, r - 1};
+    }
+};
+
 // link :
 // https://leetcode.cn/problems/find-first-and-last-position-of-element-in-sorted-array/description/?envType=study-plan-v2&envId=top-100-liked
