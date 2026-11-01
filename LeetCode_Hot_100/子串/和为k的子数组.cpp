@@ -95,4 +95,23 @@ public:
     }
 };
 
+// 第四遍写
+class Solution {
+public:
+    int subarraySum(vector<int>& nums, int k) {
+        int ans = 0;
+        unordered_map<int, int> map; // 前缀和 -> 前缀和出现次数
+        map[0] = 1;                  // 前缀和为0的出现次数为1次
+        int prev = 0;                // [0 - i]的和
+        for (int i = 0; i < nums.size(); i++) {
+            prev += nums[i];
+            if (map.count(prev - k))
+                ans += map[prev - k];
+            map[prev]++;
+        }
+        return ans;
+    }
+};
+
+
 // link : https://leetcode.cn/problems/subarray-sum-equals-k/?envType=study-plan-v2&envId=top-100-liked
