@@ -19,3 +19,18 @@ ListNode *rotateRight(ListNode *head, int k) {
 
     return NewHead;
 }
+
+// 3. 无重复字符的最长子串
+int lengthOfLongestSubstring(string s) {
+    unordered_map<char, int> cnt;
+    int n = s.size();
+    int ans = 0;
+    for (int l = 0, r = 0; r < n; r++) {
+        cnt[s[r]]++;
+        while (cnt[s[r]] > 1) {
+            cnt[s[l++]]--;
+        }
+        ans = max(ans, r - l + 1);
+    }
+    return ans;
+}
