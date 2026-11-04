@@ -34,3 +34,33 @@ int lengthOfLongestSubstring(string s) {
     }
     return ans;
 }
+
+// 98. 验证二叉搜索树
+using LL = long long;
+bool isValidBST(TreeNode *root) { return dfs(root, LONG_MIN, LONG_MAX); }
+bool dfs(TreeNode *root, LL lower, LL upper) {
+    if (!root)
+        return true;
+    if (root->val <= lower || root->val >= upper)
+        return false;
+    return dfs(root->left, lower, root->val) && dfs(root->right, root->val, upper);
+}
+
+// 153. 寻找旋转排序数组中的最小值
+int findMin(vector<int> &nums) {
+    int n = nums.size();
+    int pivot = nums[n - 1];
+    if (pivot > nums[0])
+        return nums[0];
+    int l = 0, r = n - 1;
+    while (l <= r) {
+        int mid = l + (r - l) / 2;
+        if (nums[mid] > pivot) {
+            l = mid + 1;
+        } else {
+            r = mid - 1;
+        }
+    }
+    cout << l << " " << r << endl;
+    return nums[l];
+}
