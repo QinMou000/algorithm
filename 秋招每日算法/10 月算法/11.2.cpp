@@ -90,3 +90,65 @@ int maxAreaOfIsland(vector<vector<int>> &grid) {
     }
     return ans;
 }
+
+// 121. 买卖股票的最佳时机
+int maxProfit(vector<int> &prices) {
+    int n = prices.size();
+    vector<int> dp(n); // dp[i] 表示 i 位置前面最小的数
+    dp[0] = prices[0];
+    for (int i = 1; i < n; i++) {
+        dp[i] = min(dp[i - 1], prices[i - 1]);
+    }
+    // 这里的 dp 表就是在维护最低买入价格，由于只需要知道 i - 1 的 dp
+    // 所以可以空间优化成下面的版本
+    int ans = 0;
+    for (int i = 0; i < n; i++) {
+        if (prices[i] - dp[i] > ans)
+            ans = prices[i] - dp[i];
+    }
+    return ans;
+}
+int maxProfit(vector<int> &prices) {
+    int n = prices.size();
+    int min_prices = INT_MAX;
+    int max_profit = 0;
+    for (int i = 0; i < n; i++) {
+        // 不断维护最低买入价格
+        if (prices[i] < min_prices)
+            min_prices = prices[i];
+        // 假设要在今天卖出
+        if (max_profit < prices[i] - min_prices)
+            max_profit = prices[i] - min_prices;
+    }
+    return max_profit;
+}
+
+// 394. 字符串解码
+string decodeString(string s) {
+    stack<pair<int, string>> stk;
+    int cnt = 0;
+    string ans = "";
+    for (auto c : s) {
+        if (c >= '0' && c <= '9') {
+            cnt = cnt * 10 + c - '0';
+        } else if (c >= 'a' && c <= 'z') {
+            ans += c;
+        } else if (c == '[') {
+            stk.push(make_pair(cnt, ans));
+            cnt = 0;
+            ans = "";
+        } else {
+            string tmp = "";
+            // 拿出来的是这个[]前面的那个数字
+            // ans 此时为[]里面的字母
+            // pair.second 为[]前面的字母
+            auto pair = stk.top();
+            stk.pop();
+            for (int k = 0; k < pair.first; k++) {
+                tmp += ans;
+            }
+            ans = pair.second + tmp;
+        }
+    }
+    return ans;
+}
