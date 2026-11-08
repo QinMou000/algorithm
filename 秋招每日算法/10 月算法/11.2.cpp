@@ -152,3 +152,18 @@ string decodeString(string s) {
     }
     return ans;
 }
+
+// 236. 二叉树的最近公共祖先
+TreeNode *lowestCommonAncestor(TreeNode *root, TreeNode *p, TreeNode *q) {
+    if (!root || root == p || root == q)
+        return root; // 如果root为空或者root就是p或者q直接返回
+    // 在左子树中找 p 或 q
+    TreeNode *l = lowestCommonAncestor(root->left, p, q);
+    // 在右子树中找 p 或 q
+    TreeNode *r = lowestCommonAncestor(root->right, p, q);
+    // 情况1：左右都找到 → 当前 root 就是最近公共祖先
+    if (l && r)
+        return root;
+    // 情况2：只找到一个 → 把那个往上返回
+    return !l ? r : l;
+}
