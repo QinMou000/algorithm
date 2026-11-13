@@ -167,3 +167,20 @@ TreeNode *lowestCommonAncestor(TreeNode *root, TreeNode *p, TreeNode *q) {
     // 情况2：只找到一个 → 把那个往上返回
     return !l ? r : l;
 }
+
+int maxGain(vector<int> &cost, vector<int> &gain, int M) {
+    int n = cost.size();
+    // dp[i][j] 表示前 i 个项目，花费不超过 j 的最大收益
+    vector<vector<int>> dp(n + 1, vector<int>(M + 1, 0));
+    for (int i = 1; i <= n; i++) {
+        for (int j = 0; j <= M; j++) {
+            // 不选第 i 个项目
+            dp[i][j] = dp[i - 1][j];
+            // 选第 i 个项目
+            if (j >= cost[i - 1]) {
+                dp[i][j] = max(dp[i][j], dp[i - 1][j - cost[i - 1]] + gain[i - 1]);
+            }
+        }
+    }
+    return dp[n][M];
+}
